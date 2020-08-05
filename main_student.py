@@ -125,6 +125,7 @@ wcss = []
 for i in range(1, 7):
     kmeans = KMeans(n_clusters = i, init = 'k-means++', random_state = 42)
     kmeans.fit(dataset_questions_pca)
+    #Guardo la suma del error cuadrado
     wcss.append(kmeans.inertia_)
 
 plt.plot(range(1, 7), wcss)
