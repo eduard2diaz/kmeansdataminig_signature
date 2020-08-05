@@ -78,7 +78,7 @@ plt.show()
 
 
 #Aplico k-means sobre el conjunto brindado por pca
-kmeans = KMeans(n_clusters = 3, init = 'k-means++',max_iter=300,n_init=10,random_state=1)
+kmeans = KMeans(n_clusters = 2, init = 'k-means++',max_iter=300,n_init=10,random_state=1)
 y_kmeans = kmeans.fit_predict(dataset_questions_pca)
 initial_centroids=kmeans.cluster_centers_
 
@@ -94,7 +94,7 @@ print ('Pureza del clustering realizado = ', purity)
 
 plt.scatter(dataset_questions_pca[y_kmeans == 0, 0], dataset_questions_pca[y_kmeans == 0, 1], c = 'red', label = 'Cluster 1')
 plt.scatter(dataset_questions_pca[y_kmeans == 1, 0], dataset_questions_pca[y_kmeans == 1, 1], c = 'blue', label = 'Cluster 2')
-plt.scatter(dataset_questions_pca[y_kmeans == 2, 0], dataset_questions_pca[y_kmeans == 2, 1], c = 'green', label = 'Cluster 3')
+#plt.scatter(dataset_questions_pca[y_kmeans == 2, 0], dataset_questions_pca[y_kmeans == 2, 1], c = 'green', label = 'Cluster 3')
 plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], c = 'yellow', label = 'Centroides')
 plt.title('Clusters of semillas')
 plt.xlabel('PCA 1')
@@ -107,7 +107,7 @@ plt.show()
 
 # Realizando clustering a partir de c-means
 # fit the fuzzy-c-means
-fcm = FCM(n_clusters=3)
+fcm = FCM(n_clusters=2)
 fcm.fit(dataset_questions_pca)
 result=fcm.predict(dataset_questions_pca)
 # outputs
