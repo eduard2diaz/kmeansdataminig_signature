@@ -41,16 +41,16 @@ for instance in attributes_info:
 features = dataset.iloc[:, 0:7]
 features_aux=features.values
 #Imprimiendo las instancias de las variables de entrada
-print(features)
+#print(features)
 #Definimos el atributo que es el último atributo
 target = dataset.iloc[:, -1]
 #Imprimiendo las instancias de la variable destino
-print(target)
+#print(target)
 
 #Analisis de correlacion
 correlation_matrix=features.corr()
-print("Matriz de correlacion")
-print(correlation_matrix)
+#print("Matriz de correlacion")
+#print(correlation_matrix)
 df=pd.DataFrame(correlation_matrix)
 df.to_csv('./Data/semilla/correlacion.csv', index=False)
 
@@ -77,12 +77,12 @@ plt.xlabel('Componente principal')
 plt.title('Screen plot')
 plt.show()
 #imprimiendo el porcentaje de varianza explicada por cada componente
-for x in range(1,len(per_var)+1):
-    print("PC"+str(x), "Percentage", per_var[x-1])
+#for x in range(1,len(per_var)+1):
+#    print("PC"+str(x), "Percentage", per_var[x-1])
 
 #Planteamos los datos como la relacion lineal de solamente dos componentes
 pca = PCA(n_components = 2)
-dataset_questions_pca = pca.fit_transform(features)
+dataset_questions_pca = pca.fit_transform(scaled_data)
 
 #Analizamos la cantidad de cluster a partir de la informacion obtenida de la relacion lineal del pca
 #Aplico el metodo del codo sobre el conjunto de datos
@@ -101,7 +101,7 @@ plt.show()
 model = KMeans()
 visualizer = KElbowVisualizer(model, k=(1,10))
 #Se normalizan los datos en el visualizador
-visualizer.fit(features)
+visualizer.fit(scaled_data)
 #Se muestran los datos en el visualizador del metodo del codo
 visualizer.show()
 #Aplicamos K-Means sobre el conjunto de datos original para 3 clusters
@@ -111,27 +111,28 @@ kmeans = KMeans(n_clusters=3,
                   n_init=10,
                   random_state=0)
 
-kmeans.fit(features)
-cluster_labels = kmeans.fit_predict(features)
+kmeans.fit(scaled_data)
+cluster_labels = kmeans.fit_predict(scaled_data)
 initial_centroids=kmeans.cluster_centers_
-print("Centroides iniciales")
-for instance in initial_centroids:
-    print(instance)
+#print("Centroides iniciales")
+#for instance in initial_centroids:
+#    print(instance)
 
-silhouette_avg = metrics.silhouette_score(features, cluster_labels)
+silhouette_avg = metrics.silhouette_score(scaled_data, cluster_labels)
 print ('El coeficiente de silueta del agrupamiento es = ', silhouette_avg)
 purity = purity_score(target, cluster_labels)
 print ('Pureza del clustering realizado = ', purity)
 
-points_summarize=[]
+"""points_summarize=[]
 for obj in range(len(cluster_labels)):
     #print('Instancia '+(str(obj+1)), 'Cluster',cluster_labels[obj])
     find(points_summarize,cluster_labels[obj])
 print("Contador de clusters",points_summarize)
+"""
 
-plt.scatter(features_aux[cluster_labels==0,0],features_aux[cluster_labels==0,1],c='red',label='Cluster I')
-plt.scatter(features_aux[cluster_labels==1,0],features_aux[cluster_labels==1,1],c='blue',label='Cluster II')
-plt.scatter(features_aux[cluster_labels==2,0],features_aux[cluster_labels==2,1],c='green',label='Cluster III')
+plt.scatter(scaled_data[cluster_labels==0,0],scaled_data[cluster_labels==0,1],c='red',label='Cluster I')
+plt.scatter(scaled_data[cluster_labels==1,0],scaled_data[cluster_labels==1,1],c='blue',label='Cluster II')
+plt.scatter(scaled_data[cluster_labels==2,0],scaled_data[cluster_labels==2,1],c='green',label='Cluster III')
 plt.scatter(initial_centroids[:,0],initial_centroids[:,1],c='yellow',label='Centroides')
 
 plt.title("KMeans Clustering")
@@ -144,6 +145,8 @@ plt.show()
 kmeans = KMeans(n_clusters = 3, init = 'k-means++',max_iter=300,n_init=10,random_state=0)
 y_kmeans = kmeans.fit_predict(dataset_questions_pca)
 initial_centroids=kmeans.cluster_centers_
+
+"""
 points_summarize=[]
 for obj in range(len(y_kmeans)):
     #print('Instancia '+(str(obj+1)), 'Cluster',y_kmeans[obj])
@@ -159,7 +162,7 @@ print("Total de elementos distintos de cada clustering",distintos);
 print("Centroides iniciales")
 for instance in initial_centroids:
     print(instance)
-
+"""
 plt.scatter(dataset_questions_pca[y_kmeans == 0, 0], dataset_questions_pca[y_kmeans == 0, 1], c = 'red', label = 'Cluster 1')
 plt.scatter(dataset_questions_pca[y_kmeans == 1, 0], dataset_questions_pca[y_kmeans == 1, 1], c = 'blue', label = 'Cluster 2')
 plt.scatter(dataset_questions_pca[y_kmeans == 2, 0], dataset_questions_pca[y_kmeans == 2, 1], c = 'green', label = 'Cluster 3')

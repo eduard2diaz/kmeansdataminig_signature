@@ -34,20 +34,21 @@ dataset = pd.read_csv('Data/heart/heart.csv')
 features = dataset.iloc[:, 0:12]
 features_aux=features.values
 #Imprimiendo las instancias de las variables de entrada
-print(features)
+#print(features)
 #Definimos el atributo que es el último atributo
 target = dataset.iloc[:, -1]
 #Imprimiendo las instancias de la variable destino
-print(target)
+#print(target)
 #Analisis de correlacion
 correlation_matrix=features.corr()
-print("Matriz de correlacion")
-print(correlation_matrix)
+#print("Matriz de correlacion")
+#print(correlation_matrix)
 df=pd.DataFrame(correlation_matrix)
 df.to_csv('./Data/heart/correlacion.csv', index=False)
 #PCA
 #dicha funcion scale lo que hace es centrar y escalar los datos
 scaled_data=preprocessing.scale(features)
+
 pca=PCA()
 #Aqui se hacen los calculos de PCA
 pca.fit(scaled_data)
@@ -70,7 +71,7 @@ for x in range(1,len(per_var)+1):
 
 #Planteamos los datos como la relacion lineal de solamente dos componentes
 pca = PCA(n_components = 2)
-dataset_questions_pca = pca.fit_transform(features)
+dataset_questions_pca = pca.fit_transform(scaled_data)
 
 #Analizamos la cantidad de cluster a partir de la informacion obtenida de la relacion lineal del pca
 #Aplico el metodo del codo sobre el conjunto de datos
@@ -90,20 +91,20 @@ plt.show()
 kmeans = KMeans(n_clusters = 2, init = 'k-means++',max_iter=300,n_init=10,random_state=1)
 y_kmeans = kmeans.fit_predict(dataset_questions_pca)
 initial_centroids=kmeans.cluster_centers_
-
+"""
 print("Centroides iniciales")
 for instance in initial_centroids:
     print(instance)
+"""
 
-
-silhouette_avg = metrics.silhouette_score(features, y_kmeans)
+silhouette_avg = metrics.silhouette_score(scaled_data, y_kmeans)
 print ('El coeficiente de silueta del agrupamiento es = ', silhouette_avg)
 purity = purity_score(target, y_kmeans)
 print ('Pureza del clustering realizado = ', purity)
 
 plt.scatter(dataset_questions_pca[y_kmeans == 0, 0], dataset_questions_pca[y_kmeans == 0, 1], c = 'red', label = 'Cluster 1')
 plt.scatter(dataset_questions_pca[y_kmeans == 1, 0], dataset_questions_pca[y_kmeans == 1, 1], c = 'blue', label = 'Cluster 2')
-#plt.scatter(dataset_questions_pca[y_kmeans == 2, 0], dataset_questions_pca[y_kmeans == 2, 1], c = 'green', label = 'Cluster 3')
+plt.scatter(dataset_questions_pca[y_kmeans == 2, 0], dataset_questions_pca[y_kmeans == 2, 1], c = 'green', label = 'Cluster 3')
 plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], c = 'yellow', label = 'Centroides')
 plt.title('Clusters of pacientes de insuficiencia cardiaca')
 plt.xlabel('PCA 1')
@@ -111,6 +112,7 @@ plt.ylabel('PCA 2')
 plt.legend()
 plt.show()
 
+"""
 points_summarize=[]
 for obj in range(len(y_kmeans)):
     #print('Instancia '+(str(obj+1)), 'Cluster',cluster_labels[obj])
@@ -137,4 +139,4 @@ scatter(dataset_questions_pca[:,0], dataset_questions_pca[:,1], ax=axes[0])
 scatter(dataset_questions_pca[:,0], dataset_questions_pca[:,1], ax=axes[1], hue=fcm_labels)
 scatter(fcm_centers[:,0], fcm_centers[:,1], ax=axes[1],marker="s",s=200)
 plt.show()
-
+"""

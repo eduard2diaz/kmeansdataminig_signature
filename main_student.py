@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 from sklearn import metrics
 import collections
 from sklearn.cluster import AgglomerativeClustering
+from sklearn import preprocessing
 import scipy.cluster.hierarchy as sch
 sns.set_style('whitegrid')
 
@@ -117,8 +118,10 @@ correlation_matrix=dataset_questions.corr()
 df=pd.DataFrame(correlation_matrix)
 df.to_csv('./Data/student/correlacion.csv', index=False)
 
+scaled_data=preprocessing.scale(dataset_questions)
+
 pca = PCA(n_components = 2)
-dataset_questions_pca = pca.fit_transform(dataset_questions)
+dataset_questions_pca = pca.fit_transform(scaled_data)
 
 #Aplico el metodo del codo sobre el conjunto de datos
 wcss = []
@@ -133,14 +136,14 @@ plt.title('The Elbow Method')
 plt.xlabel('Number of clusters')
 plt.ylabel('WCSS')
 plt.show()
-
+"""
 for i in range(2, 7):
     print("VALOR DE K=",i)
     kmeans = KMeans(n_clusters = i, init = 'k-means++', random_state = 42)
     cluster_labels=kmeans.fit_predict(dataset_questions_pca)
     silhouette_avg = metrics.silhouette_score(dataset_questions_pca, cluster_labels)
     print ('El coeficiente de silueta del agrupamiento es = ', silhouette_avg)
-
+"""
 
 kmeans = KMeans(n_clusters = 3, init = 'k-means++')
 y_kmeans = kmeans.fit_predict(dataset_questions_pca)
@@ -162,7 +165,7 @@ plt.title('Dendrogram')
 plt.xlabel('questions')
 plt.ylabel('Euclidean distances')
 plt.show()
-"""
+
 
 # Fitting Hierarchical Clustering to the dataset
 hc = AgglomerativeClustering(n_clusters = 2, affinity = 'euclidean', linkage = 'ward')
@@ -179,4 +182,4 @@ plt.legend()
 plt.show()
 
 print('Conteo clustering jerarquico',collections.Counter(y_hc))
-print("FINALIZO")
+"""
