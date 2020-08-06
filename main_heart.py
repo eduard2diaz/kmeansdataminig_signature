@@ -9,6 +9,15 @@ from fcmeans import FCM
 from sklearn.datasets import make_blobs
 from seaborn import scatterplot as scatter
 
+def find(vector, value):
+    founded=False
+    for i in range(len(vector)):
+        if vector[i]['label']==value:
+            vector[i]['count']+=1
+            founded=True
+            break
+    if founded==False:
+        vector.append({'label':value,'count':1})
 
 def purity_score(y_true, y_pred):
     # compute contingency matrix (also called confusion matrix)
@@ -96,13 +105,17 @@ plt.scatter(dataset_questions_pca[y_kmeans == 0, 0], dataset_questions_pca[y_kme
 plt.scatter(dataset_questions_pca[y_kmeans == 1, 0], dataset_questions_pca[y_kmeans == 1, 1], c = 'blue', label = 'Cluster 2')
 #plt.scatter(dataset_questions_pca[y_kmeans == 2, 0], dataset_questions_pca[y_kmeans == 2, 1], c = 'green', label = 'Cluster 3')
 plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], c = 'yellow', label = 'Centroides')
-plt.title('Clusters of semillas')
+plt.title('Clusters of pacientes de insuficiencia cardiaca')
 plt.xlabel('PCA 1')
 plt.ylabel('PCA 2')
 plt.legend()
 plt.show()
 
-
+points_summarize=[]
+for obj in range(len(y_kmeans)):
+    #print('Instancia '+(str(obj+1)), 'Cluster',cluster_labels[obj])
+    find(points_summarize,y_kmeans[obj])
+print("Contador de clusters",points_summarize)
 
 
 # Realizando clustering a partir de c-means
